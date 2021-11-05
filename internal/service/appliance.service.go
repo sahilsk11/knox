@@ -1,9 +1,9 @@
 package service
 
-type PlayerService interface{}
+type ApplianceService interface{}
 
-type playerService struct{}
+type applianceService struct{}
 
-func NewPlayerService() PlayerService {
-	return playerService{}
+func NewApplianceService() ApplianceService {
+	return applianceService{}
 }
