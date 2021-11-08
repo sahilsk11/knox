@@ -3,11 +3,13 @@ package service
 import (
 	"fmt"
 
+	"github.com/pkg/errors"
 	domain "github.com/sahilsk11/knox/internal/domain/player"
 	"github.com/sahilsk11/knox/internal/util"
 )
 
 type PlayerService interface {
+	ListAvailableDevices() ([]domain.PlayerDevice, error)
 	StartPlayback(input StartPlaybackInput) error
 }
 
@@ -21,8 +23,18 @@ func NewPlayerService(playerVendorRepository domain.PlayerVendorRepository) Play
 	}
 }
 
+func (m playerService) ListAvailableDevices() ([]domain.PlayerDevice, error) {
+	devices, err := m.PlayerVendorRepository.ListDevices()
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to list devices")
+	}
+
+	return devices, nil
+}
+
 type StartPlaybackInput struct {
 	DeviceNameSimilarTo string
+	Genre               domain.PlaybackGenre
 }
 
 func (m playerService) StartPlayback(input StartPlaybackInput) error {
@@ -38,6 +50,7 @@ func (m playerService) StartPlayback(input StartPlaybackInput) error {
 
 	playbackInput := domain.StartPlaybackInput{
 		DeviceID: deviceID,
+		Genre:    input.Genre,
 	}
 	err = m.PlayerVendorRepository.StartPlayback(playbackInput)
 	if err != nil {

@@ -7,4 +7,5 @@ type PlayerVendorRepository interface {
 
 type StartPlaybackInput struct {
 	DeviceID string
+	Genre    PlaybackGenre
 }
