@@ -11,6 +11,8 @@ type PlaybackGenre string
 var (
 	PlaybackGenre_SoftPop PlaybackGenre = "SOFT_POP"
 	PlaybackGenre_Rap     PlaybackGenre = "RAP"
+	PlaybackGenre_Classic PlaybackGenre = "CLASSIC"
+	PlaybackGenre_Simp    PlaybackGenre = "SIMP"
 )
 
 var genreArtists map[PlaybackGenre][]string = map[PlaybackGenre][]string{
@@ -26,6 +28,24 @@ var genreArtists map[PlaybackGenre][]string = map[PlaybackGenre][]string{
 		"J. Cole",
 		"Kendrick Lamar",
 		"21 Savage",
+		"Metro Boomin",
+		"Migos",
+		"Quavo",
+		"The Weeknd",
+	},
+	PlaybackGenre_Classic: {
+		"AC/DC",
+		"The Beatles",
+		"Rick Astley",
+		"ABBA",
+		"Queen",
+	},
+	PlaybackGenre_Simp: {
+		"Blackbear",
+		"The Weeknd",
+		"Giveon",
+		"Drake",
+		"Khalid",
 	},
 }
 
@@ -38,7 +58,38 @@ var genreTracks map[PlaybackGenre][]string = map[PlaybackGenre][]string{
 	},
 	PlaybackGenre_Rap: {
 		"m y . l i f e",
-		"Already Best Friends",
+		"No Heart",
+		"Wants and Needs",
+		"Mask Off",
+		"The Box",
+		"Flocky Flocky",
+		"Lemonade",
+		"Antitode",
+		"Party Monster",
+	},
+	PlaybackGenre_Classic: {
+		"Never Gonna Give You Up",
+		"Bohemian Rhapsody",
+		"Hey Jude",
+		"Here Comes the Sun",
+		"Thunderstruck",
+	},
+	PlaybackGenre_Simp: {
+		"Teenage Fever",
+		"Crew Love",
+		"Come and See Me",
+		"Marvins Room",
+		"Sober",
+		"3005",
+		"Juke Jam",
+		"Save Your Tears",
+		"Escape From LA",
+		"Until I Bleed Out",
+		"The Morning",
+		"Loft Music",
+		"Twenty Eight",
+		"World We Created",
+		"Like I Want You",
 	},
 }
 
@@ -70,8 +121,9 @@ func GenerateSeed(genre PlaybackGenre) PlaybackGenerateSeedResponse {
 }
 
 func random(min, max int) int {
-	max += 1
-	rand.Seed(time.Now().UnixNano())
+	seed := time.Now().UnixNano()
+	fmt.Println(seed)
+	rand.Seed(seed)
 	return rand.Intn(max-min+1) + min
 }
 

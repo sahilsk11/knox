@@ -19,7 +19,7 @@ type spotifyRepository struct {
 }
 
 func NewSpotifyRepository(accessToken, refreshToken string) domain.PlayerVendorRepository {
-	i, err := strconv.ParseInt("1636337286", 10, 64)
+	i, err := strconv.ParseInt("1636344079", 10, 64)
 	if err != nil {
 		panic(err)
 	}
