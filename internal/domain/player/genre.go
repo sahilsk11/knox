@@ -55,7 +55,7 @@ func GenerateSeed(genre PlaybackGenre) PlaybackGenerateSeedResponse {
 
 	tracks := genreTracks[genre]
 	shuffle(tracks)
-	numTracks := random(1, 5)
+	numTracks := 5 - numArtists
 	selectedTracks := tracks[:min(numTracks, len(tracks))]
 
 	fmt.Println(PlaybackGenerateSeedResponse{

@@ -35,7 +35,7 @@ func listDevices(playerService service.PlayerService) {
 func play(playerService service.PlayerService) {
 	input := service.StartPlaybackInput{
 		DeviceNameSimilarTo: "berry",
-		Genre:               player.PlaybackGenre_Rap,
+		Genre:               player.PlaybackGenre_SoftPop,
 	}
 	err := playerService.StartPlayback(input)
 	if err != nil {
