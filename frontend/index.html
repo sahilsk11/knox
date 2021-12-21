@@ -1,0 +1,54 @@
+<html>
+  <head>
+    <script>
+      function loadDevices() {
+        fetch('http://localhost:8000/listDevices')
+        .then(response => response.json())
+        .then(data => {
+          devicesDropdown = document.getElementById('devices');
+          data.devices.forEach(device => {
+            devicesDropdown.options[devicesDropdown.options.length] = new Option(device.device_name, device.device_id)
+          })
+        });
+        fetch('http://localhost:8000/listGenres')
+        .then(response => response.json())
+        .then(data => {
+          devicesDropdown = document.getElementById('genre');
+          data.genres.forEach(genre => {
+            devicesDropdown.options[devicesDropdown.options.length] = new Option(genre, genre)
+          })
+        });
+      }
+
+      function play() {
+        device = document.getElementById('devices').value;
+        genre = document.getElementById('genre').value;
+        fetch('http://localhost:8000/play', {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            device_id: device,
+            genre: genre
+          })
+        })
+        .then(response => response.json())
+        .then(data => {});
+      }
+    </script>
+  </head>
+  <body onload="loadDevices()">
+    <label>devices</label>
+    <select id="devices">
+    </select>
+    <br> <br>
+    <label>genre</label>
+    <select id="genre">
+    </select>
+    <br> <br>
+    <button onClick="play()">play</button>
+    
+  </body>
+</html>
