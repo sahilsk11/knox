@@ -25,7 +25,7 @@ func main() {
 	)
 	playerService := service.NewPlayerService(spotifyRepository)
 
-	startServer(playerService)
+	play(playerService)
 }
 
 func listDevices(playerService service.PlayerService) {

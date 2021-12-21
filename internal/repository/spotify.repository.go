@@ -71,21 +71,23 @@ func (m spotifyRepository) StartPlayback(input domain.StartPlaybackInput) error 
 	if err != nil {
 		return err
 	}
-	firstTrack := genreRecommendations[0].URI
 	err = m.Client.PlayOpt(context.Background(), &spotify.PlayOptions{
 		DeviceID: (*spotify.ID)(&input.DeviceID),
-		URIs:     []spotify.URI{firstTrack},
+		URIs:     trackURIs(genreRecommendations),
 	})
 	if err != nil {
 		return fmt.Errorf("failed to start playback on device ID %s: %s", input.DeviceID, err.Error())
 	}
 
-	err = m.Client.Repeat(context.Background(), "context")
-	if err != nil {
-		return fmt.Errorf("failed to start playback on device ID %s: %s", input.DeviceID, err.Error())
-	}
-
 	return nil
+}
+
+func trackURIs(tracks []spotify.SimpleTrack) []spotify.URI {
+	uris := make([]spotify.URI, len(tracks))
+	for i, track := range tracks {
+		uris[i] = track.URI
+	}
+	return uris
 }
 
 func (m spotifyRepository) User() error {
