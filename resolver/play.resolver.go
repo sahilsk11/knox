@@ -2,10 +2,7 @@ package resolver
 
 import (
 	"encoding/json"
-	"io"
-	"io/ioutil"
-	"log"
-	"net/http"
+	"fmt"
 	"strings"
 
 	"github.com/sahilsk11/knox/internal/domain/player"
@@ -20,24 +17,15 @@ type playRequest struct {
 type playResponse struct {
 }
 
-func (m httpServer) play(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-
-	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
-	if err != nil {
-		json.NewEncoder(w).Encode(responseError{ErrorMessage: err.Error()})
-	}
-
+func (m httpServer) play(requestBody []byte) ([]byte, error) {
 	request := playRequest{}
-	err = json.Unmarshal(body, &request)
+	err := json.Unmarshal(requestBody, &request)
 	if err != nil {
-		json.NewEncoder(w).Encode(responseError{ErrorMessage: err.Error()})
+		return nil, fmt.Errorf("[play resolver] could not decode request body %s : %s", string(requestBody), err.Error())
 	}
 	genre := strings.ToUpper(strings.ReplaceAll(request.Genre, " ", "_"))
 
-	logger := log.Default()
-	logger.Printf("starting %s on %s", genre, request.DeviceID)
+	m.Logger.Printf("starting %s on %s", genre, request.DeviceID)
 
 	err = m.PlayerService.StartPlayback(service.StartPlaybackInput{
 		DeviceFilter: service.DeviceFilter{
@@ -46,8 +34,13 @@ func (m httpServer) play(w http.ResponseWriter, r *http.Request) {
 		Genre: player.PlaybackGenre(genre),
 	})
 	if err != nil {
-		json.NewEncoder(w).Encode(responseError{ErrorMessage: err.Error()})
+		return nil, fmt.Errorf("[play resolver] could not start playback %s", err.Error())
 	}
 
-	json.NewEncoder(w).Encode(playResponse{})
+	jsonResponse, err := json.Marshal(playResponse{})
+	if err != nil {
+		return nil, fmt.Errorf("[play resolver] could not marshal response struct %v : %s", playResponse{}, err.Error())
+	}
+
+	return jsonResponse, nil
 }

@@ -2,7 +2,6 @@ package resolver
 
 import (
 	"encoding/json"
-	"net/http"
 	"strings"
 )
 
@@ -10,12 +9,10 @@ type listGenresResponse struct {
 	Genres []string `json:"genres"`
 }
 
-func (m httpServer) listGenres(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
+func (m httpServer) listGenres([]byte) ([]byte, error) {
 	genres, err := m.PlayerService.ListGenres()
 	if err != nil {
-		json.NewEncoder(w).Encode(responseError{})
+		return nil, err
 	}
 	genresStr := make([]string, len(genres))
 	for i, genre := range genres {
@@ -24,5 +21,11 @@ func (m httpServer) listGenres(w http.ResponseWriter, r *http.Request) {
 	response := listGenresResponse{
 		Genres: genresStr,
 	}
-	json.NewEncoder(w).Encode(response)
+
+	jsonResponse, err := json.Marshal(response)
+	if err != nil {
+		return nil, err
+	}
+
+	return jsonResponse, nil
 }

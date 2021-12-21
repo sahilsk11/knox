@@ -1,7 +1,11 @@
 package resolver
 
 import (
+	"encoding/json"
 	"fmt"
+	"io"
+	"io/ioutil"
+	"log"
 	"net/http"
 
 	"github.com/sahilsk11/knox/internal/service"
@@ -15,16 +19,50 @@ type responseError struct {
 func NewHTTPServer(playerService service.PlayerService) httpServer {
 	return httpServer{
 		PlayerService: playerService,
+		Logger:        log.Default(),
 	}
 }
 
 type httpServer struct {
 	PlayerService service.PlayerService
+	Logger        *log.Logger
+}
+
+func (m httpServer) loggingMiddleware(handler func([]byte) ([]byte, error)) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+
+		var (
+			requestBody []byte
+			err         error
+		)
+
+		if r.Method == "POST" {
+			requestBody, err = ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+			if err != nil {
+				json.NewEncoder(w).Encode(responseError{ErrorMessage: err.Error()})
+				m.Logger.Println(err.Error())
+			}
+		}
+
+		responseBody, err := handler(requestBody)
+		if err != nil {
+			json.NewEncoder(w).Encode(responseError{
+				ErrorCode:    400,
+				ErrorMessage: err.Error(),
+			})
+			m.Logger.Println(err.Error())
+		} else {
+			w.Write(responseBody)
+		}
+	})
 }
 
 func (m httpServer) StartHTTPServer(port int) {
-	http.HandleFunc("/listDevices", m.listDevices)
-	http.HandleFunc("/listGenres", m.listGenres)
-	http.HandleFunc("/play", m.play)
-	http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
+	mux := http.NewServeMux()
+	mux.Handle("/listDevices", m.loggingMiddleware(m.listDevices))
+	mux.Handle("/listGenres", m.loggingMiddleware(m.listGenres))
+	mux.Handle("/play", m.loggingMiddleware(m.play))
+	http.ListenAndServe(fmt.Sprintf(":%d", port), mux)
 }

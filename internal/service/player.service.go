@@ -50,7 +50,7 @@ type DeviceFilter struct {
 func (m playerService) resolveDeviceFilter(filter DeviceFilter) (*string, error) {
 	if filter.DeviceID != nil {
 		return filter.DeviceID, nil
-	} else if filter.DeviceNameSimilarTo != nil {
+	} else if filter.DeviceNameSimilarTo == nil {
 		return nil, fmt.Errorf("invalid device filter")
 	}
 
