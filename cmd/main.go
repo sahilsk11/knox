@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
+	"github.com/sahilsk11/knox/internal/domain/light_controller"
 	"github.com/sahilsk11/knox/internal/domain/player"
 	"github.com/sahilsk11/knox/internal/repository"
 	"github.com/sahilsk11/knox/internal/service"
@@ -17,24 +17,24 @@ func main() {
 		log.Fatalf("failed to load config: %s", err.Error())
 	}
 
-	spotifyRepository := repository.NewSpotifyRepository(
-		config.SpotifyConfig.AccessToken,
-		config.SpotifyConfig.RefreshToken,
-		config.SpotifyConfig.TokenExpiry,
-		config.SpotifyConfig.ClientID,
+	// spotifyRepository := repository.NewSpotifyRepository(
+	// 	config.SpotifyConfig.AccessToken,
+	// 	config.SpotifyConfig.RefreshToken,
+	// 	config.SpotifyConfig.TokenExpiry,
+	// 	config.SpotifyConfig.ClientID,
+	// )
+	homeAssistantRepository := repository.NewHomeAssistantRepository(
+		config.HomeAssistantConfig.AccessToken, config.HomeAssistantConfig.BaseURL,
 	)
-	playerService := service.NewPlayerService(spotifyRepository)
+	// playerService := service.NewPlayerService(spotifyRepository)
 
-	startServer(playerService)
+	lights(homeAssistantRepository)
 }
 
-func listDevices(playerService service.PlayerService) {
-	devices, err := playerService.ListAvailableDevices()
+func lights(h light_controller.LightControllerRepository) {
+	err := h.ControlLights(light_controller.ControlLightsInput{})
 	if err != nil {
 		log.Fatal(err)
-	}
-	for _, device := range devices {
-		fmt.Printf("- %s : %s\n", device.DeviceName, device.DeviceID)
 	}
 }
 

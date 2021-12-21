@@ -8,7 +8,8 @@ import (
 )
 
 type Config struct {
-	SpotifyConfig SpotifyConfig `json:"spotify"`
+	SpotifyConfig       SpotifyConfig       `json:"spotify"`
+	HomeAssistantConfig HomeAssistantConfig `json:"home_assistant"`
 }
 
 type SpotifyConfig struct {
@@ -17,6 +18,11 @@ type SpotifyConfig struct {
 	AccessToken  string `json:"accessToken"`
 	RefreshToken string `json:"refreshToken"`
 	TokenExpiry  int64  `json:"tokenTime"`
+}
+
+type HomeAssistantConfig struct {
+	AccessToken string `json:"accessToken"`
+	BaseURL     string `json:"baseURL"`
 }
 
 func LoadConfig(filepath string) (*Config, error) {
