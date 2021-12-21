@@ -8,6 +8,7 @@ import (
 	"github.com/sahilsk11/knox/internal/repository"
 	"github.com/sahilsk11/knox/internal/service"
 	"github.com/sahilsk11/knox/internal/util"
+	"github.com/sahilsk11/knox/resolver"
 )
 
 func main() {
@@ -24,7 +25,7 @@ func main() {
 	)
 	playerService := service.NewPlayerService(spotifyRepository)
 
-	play(playerService)
+	startServer(playerService)
 }
 
 func listDevices(playerService service.PlayerService) {
@@ -39,11 +40,16 @@ func listDevices(playerService service.PlayerService) {
 
 func play(playerService service.PlayerService) {
 	input := service.StartPlaybackInput{
-		DeviceNameSimilarTo: "berry",
-		Genre:               player.PlaybackGenre_Simp,
+		DeviceNameSimilarTo: "Sahil’s MacBook Pro",
+		Genre:               player.PlaybackGenre_Rap,
 	}
 	err := playerService.StartPlayback(input)
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func startServer(playerService service.PlayerService) {
+	server := resolver.NewHTTPServer(playerService)
+	server.StartHTTPServer(8000)
 }
