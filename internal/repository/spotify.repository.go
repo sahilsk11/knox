@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 	"fmt"
-	"strconv"
+	"log"
 	"time"
 
 	spotifyauth "github.com/zmb3/spotify/v2/auth"
@@ -12,18 +12,27 @@ import (
 	"golang.org/x/oauth2"
 
 	domain "github.com/sahilsk11/knox/internal/domain/player"
+	"github.com/sahilsk11/knox/internal/util"
 )
 
 type spotifyRepository struct {
 	Client *spotify.Client
 }
 
-func NewSpotifyRepository(accessToken, refreshToken string) domain.PlayerVendorRepository {
-	i, err := strconv.ParseInt("1636344079", 10, 64)
-	if err != nil {
-		panic(err)
+func NewSpotifyRepository(accessToken, refreshToken string, tokenExpiryUnix int64, clientID string) domain.PlayerVendorRepository {
+	tm := time.Unix(tokenExpiryUnix, 0)
+	if tm.Before(time.Now()) {
+		// refresh token
+		s, err := util.GetAndSaveAccessToken(
+			refreshToken,
+			clientID,
+		)
+		if err != nil {
+			log.Fatal(err)
+		}
+		accessToken = s.AccessToken
+		refreshToken = s.RefreshToken
 	}
-	tm := time.Unix(i, 0)
 	token := &oauth2.Token{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,

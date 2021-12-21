@@ -16,6 +16,7 @@ type SpotifyConfig struct {
 	ClientSecret string `json:"clientSecret"`
 	AccessToken  string `json:"accessToken"`
 	RefreshToken string `json:"refreshToken"`
+	TokenExpiry  int64  `json:"tokenTime"`
 }
 
 func LoadConfig(filepath string) (*Config, error) {

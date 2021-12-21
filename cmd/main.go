@@ -16,7 +16,12 @@ func main() {
 		log.Fatalf("failed to load config: %s", err.Error())
 	}
 
-	spotifyRepository := repository.NewSpotifyRepository(config.SpotifyConfig.AccessToken, config.SpotifyConfig.RefreshToken)
+	spotifyRepository := repository.NewSpotifyRepository(
+		config.SpotifyConfig.AccessToken,
+		config.SpotifyConfig.RefreshToken,
+		config.SpotifyConfig.TokenExpiry,
+		config.SpotifyConfig.ClientID,
+	)
 	playerService := service.NewPlayerService(spotifyRepository)
 
 	play(playerService)
