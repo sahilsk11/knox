@@ -10,6 +10,7 @@ import (
 
 type PlayerService interface {
 	ListAvailableDevices() ([]domain.PlayerDevice, error)
+	ListGenres() ([]domain.PlaybackGenre, error)
 	StartPlayback(input StartPlaybackInput) error
 }
 
@@ -32,21 +33,46 @@ func (m playerService) ListAvailableDevices() ([]domain.PlayerDevice, error) {
 	return devices, nil
 }
 
-type StartPlaybackInput struct {
-	DeviceNameSimilarTo string
-	Genre               domain.PlaybackGenre
+func (m playerService) ListGenres() ([]domain.PlaybackGenre, error) {
+	return domain.ListGenreTypes(), nil
 }
 
-func (m playerService) StartPlayback(input StartPlaybackInput) error {
+type StartPlaybackInput struct {
+	DeviceFilter DeviceFilter
+	Genre        domain.PlaybackGenre
+}
+
+type DeviceFilter struct {
+	DeviceID            *string
+	DeviceNameSimilarTo *string
+}
+
+func (m playerService) resolveDeviceFilter(filter DeviceFilter) (*string, error) {
+	if filter.DeviceID != nil {
+		return filter.DeviceID, nil
+	} else if filter.DeviceNameSimilarTo != nil {
+		return nil, fmt.Errorf("invalid device filter")
+	}
+
 	devices, err := m.PlayerVendorRepository.ListDevices()
 	if err != nil {
-		return fmt.Errorf("[service] failed to list devices: %s", err.Error())
+		return nil, fmt.Errorf("[service] failed to list devices: %s", err.Error())
 	} else if len(devices) == 0 {
-		return fmt.Errorf("[service] no devices returned")
+		return nil, fmt.Errorf("[service] no devices returned")
 	}
 
 	// pick the closest device
-	deviceID := findClosestDevice(input.DeviceNameSimilarTo, devices)
+	deviceID := findClosestDevice(*filter.DeviceNameSimilarTo, devices)
+
+	return &deviceID, nil
+}
+
+func (m playerService) StartPlayback(input StartPlaybackInput) error {
+	deviceIDPtr, err := m.resolveDeviceFilter(input.DeviceFilter)
+	if err != nil {
+		return err
+	}
+	deviceID := *deviceIDPtr
 
 	playbackInput := domain.StartPlaybackInput{
 		DeviceID: deviceID,

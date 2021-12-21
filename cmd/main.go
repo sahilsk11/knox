@@ -25,7 +25,7 @@ func main() {
 	)
 	playerService := service.NewPlayerService(spotifyRepository)
 
-	play(playerService)
+	startServer(playerService)
 }
 
 func listDevices(playerService service.PlayerService) {
@@ -40,8 +40,10 @@ func listDevices(playerService service.PlayerService) {
 
 func play(playerService service.PlayerService) {
 	input := service.StartPlaybackInput{
-		DeviceNameSimilarTo: "Sahil’s MacBook Pro",
-		Genre:               player.PlaybackGenre_Rap,
+		DeviceFilter: service.DeviceFilter{
+			DeviceNameSimilarTo: util.StrPtr("Sahil’s MacBook Pro"),
+		},
+		Genre: player.PlaybackGenre_Rap,
 	}
 	err := playerService.StartPlayback(input)
 	if err != nil {

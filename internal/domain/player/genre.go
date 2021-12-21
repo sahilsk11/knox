@@ -15,6 +15,15 @@ var (
 	PlaybackGenre_Simp    PlaybackGenre = "SIMP"
 )
 
+func ListGenreTypes() []PlaybackGenre {
+	return []PlaybackGenre{
+		PlaybackGenre_SoftPop,
+		PlaybackGenre_Rap,
+		PlaybackGenre_Classic,
+		PlaybackGenre_Simp,
+	}
+}
+
 var genreArtists map[PlaybackGenre][]string = map[PlaybackGenre][]string{
 	PlaybackGenre_SoftPop: {
 		"Glass Animals",
