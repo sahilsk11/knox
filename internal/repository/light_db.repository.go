@@ -10,16 +10,16 @@ import (
 )
 
 type LightDatabaseRepository interface {
-	GetRoom(domain.RoomName) (*domain.Light, error)
+	GetRoom(domain.LightName) (*domain.Light, error)
 }
 
 type lightDatabaseRepository struct {
-	LightDatabase map[domain.RoomName]domain.Light
+	LightDatabase map[domain.LightName]domain.Light
 }
 
 type lightDatabase struct {
-	Comments []string                         `json:"comments"`
-	Lights   map[domain.RoomName]domain.Light `json:"lights"`
+	Comments []string                          `json:"comments"`
+	Lights   map[domain.LightName]domain.Light `json:"lights"`
 }
 
 func NewLightDatabaseRepository(filepath string) (LightDatabaseRepository, error) {
@@ -46,11 +46,11 @@ func NewLightDatabaseRepository(filepath string) (LightDatabaseRepository, error
 	}, nil
 }
 
-func (m lightDatabaseRepository) GetRoom(roomName domain.RoomName) (*domain.Light, error) {
-	if room, ok := m.LightDatabase[roomName]; ok {
-		room.RoomName = roomName
+func (m lightDatabaseRepository) GetRoom(LightName domain.LightName) (*domain.Light, error) {
+	if room, ok := m.LightDatabase[LightName]; ok {
+		room.LightName = LightName
 		return &room, nil
 	}
 
-	return nil, fmt.Errorf("key %s does not exist in light db", string(roomName))
+	return nil, fmt.Errorf("key %s does not exist in light db", string(LightName))
 }

@@ -16,15 +16,17 @@ type responseError struct {
 	ErrorMessage string `json:"error_message"`
 }
 
-func NewHTTPServer(playerService service.PlayerService) httpServer {
+func NewHTTPServer(playerService service.PlayerService, lightService service.LightService) httpServer {
 	return httpServer{
 		PlayerService: playerService,
+		LightService:  lightService,
 		Logger:        log.Default(),
 	}
 }
 
 type httpServer struct {
 	PlayerService service.PlayerService
+	LightService  service.LightService
 	Logger        *log.Logger
 }
 
@@ -64,5 +66,6 @@ func (m httpServer) StartHTTPServer(port int) {
 	mux.Handle("/listDevices", m.loggingMiddleware(m.listDevices))
 	mux.Handle("/listGenres", m.loggingMiddleware(m.listGenres))
 	mux.Handle("/play", m.loggingMiddleware(m.play))
+	mux.Handle("/setBrightness", m.loggingMiddleware(m.setBrightness))
 	http.ListenAndServe(fmt.Sprintf(":%d", port), mux)
 }

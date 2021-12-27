@@ -1,14 +1,24 @@
 package light_controller
 
-type RoomName string
+type LightName string
 
-const (
-	Room_Sahil_Bedroom RoomName = "SAHIL_BEDROOM"
-	Room_Living        RoomName = "LIVING"
-	Room_Kitchen       RoomName = "KITCHEN"
-)
+// decided to not list all the enum types and validate in the db instead
 
-type RoomSwitchType string
+// const (
+// 	Light_Sahil_BedLight LightName = "SAHIL_BEDLight"
+// 	Light_Living         LightName = "LIVING"
+// 	Light_Kitchen        LightName = "KITCHEN"
+// 	Light_Dining         LightName = "DINING_LIGHT"
+// 	Light_Porch          LightName = "PORCH"
+// 	Light_Entry          LightName = "ENTRY"
+// 	Light_Guest_Closet   LightName = "GUEST_CLOSET"
+// 	Light_Guest_Bathroom LightName = "GUEST_BATHROOM"
+// 	Light_Guest_Bedroom  LightName = "GUEST_BEDROOM"
+// 	Light_Sahil_Closet   LightName = "SAHIL_CLOSET"
+
+// )
+
+type LightSwitchType string
 
 const (
 	// a switch is a boolean on/off controller
@@ -25,7 +35,7 @@ const (
 )
 
 type Light struct {
-	RoomName                RoomName
-	SwitchType              RoomSwitchType `json:"switchType"`
-	HomeAssistantEntityName string         `json:"homeAssistantEntityName"`
+	LightName               LightName
+	SwitchType              LightSwitchType `json:"switchType"`
+	HomeAssistantEntityName string          `json:"homeAssistantEntityName"`
 }

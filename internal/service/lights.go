@@ -9,8 +9,8 @@ import (
 
 type LightService interface {
 	SetBrightness(SetBrightnessInput) error
-	TurnOff(domain.RoomName) error
-	TurnOn(domain.RoomName) error
+	TurnOff(domain.LightName) error
+	TurnOn(domain.LightName) error
 }
 
 type lightService struct {
@@ -26,24 +26,24 @@ func NewLightService(lightRepository domain.LightControllerRepository, lightData
 }
 
 type SetBrightnessInput struct {
-	RoomName  domain.RoomName
-	Intensity int
+	LightName  domain.LightName
+	Brightness int
 }
 
 func (m lightService) SetBrightness(input SetBrightnessInput) error {
-	room, err := m.LightDatabaseRepository.GetRoom(input.RoomName)
+	room, err := m.LightDatabaseRepository.GetRoom(input.LightName)
 	if err != nil {
 		return err
 	} else if room.HomeAssistantEntityName == "" {
-		return fmt.Errorf("%s missing home assistant name definition", string(input.RoomName))
+		return fmt.Errorf("%s missing home assistant name definition", string(input.LightName))
 	}
 	if room.SwitchType != domain.SwitchType_Adjustable {
-		return fmt.Errorf("cannot adjust brightness of %s - switch type is not adjustable", string(input.RoomName))
+		return fmt.Errorf("cannot adjust brightness of %s - switch type is not adjustable", string(input.LightName))
 	}
 
 	controlLightsInput := domain.ControlLightsInput{
 		EntityName: room.HomeAssistantEntityName,
-		Intensity:  &input.Intensity,
+		Brightness: &input.Brightness,
 		State:      domain.LightState_On,
 	}
 	err = m.LightRepository.ControlLights(controlLightsInput)
@@ -54,12 +54,12 @@ func (m lightService) SetBrightness(input SetBrightnessInput) error {
 	return nil
 }
 
-func (m lightService) TurnOff(roomName domain.RoomName) error {
-	room, err := m.LightDatabaseRepository.GetRoom(roomName)
+func (m lightService) TurnOff(LightName domain.LightName) error {
+	room, err := m.LightDatabaseRepository.GetRoom(LightName)
 	if err != nil {
 		return err
 	} else if room.HomeAssistantEntityName == "" {
-		return fmt.Errorf("%s missing home assistant name definition", string(roomName))
+		return fmt.Errorf("%s missing home assistant name definition", string(LightName))
 	}
 
 	controlLightsInput := domain.ControlLightsInput{
@@ -74,12 +74,12 @@ func (m lightService) TurnOff(roomName domain.RoomName) error {
 	return nil
 }
 
-func (m lightService) TurnOn(roomName domain.RoomName) error {
-	room, err := m.LightDatabaseRepository.GetRoom(roomName)
+func (m lightService) TurnOn(LightName domain.LightName) error {
+	room, err := m.LightDatabaseRepository.GetRoom(LightName)
 	if err != nil {
 		return err
 	} else if room.HomeAssistantEntityName == "" {
-		return fmt.Errorf("%s missing home assistant name definition", string(roomName))
+		return fmt.Errorf("%s missing home assistant name definition", string(LightName))
 	}
 
 	controlLightsInput := domain.ControlLightsInput{

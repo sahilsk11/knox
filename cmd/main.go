@@ -1,14 +1,15 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/sahilsk11/knox/internal/domain/light_controller"
 	"github.com/sahilsk11/knox/internal/domain/player"
 	"github.com/sahilsk11/knox/internal/repository"
+	"github.com/sahilsk11/knox/internal/resolver"
 	"github.com/sahilsk11/knox/internal/service"
 	"github.com/sahilsk11/knox/internal/util"
-	"github.com/sahilsk11/knox/resolver"
 )
 
 func main() {
@@ -35,12 +36,9 @@ func main() {
 	playerService := service.NewPlayerService(spotifyRepository)
 	lightService := service.NewLightService(homeAssistantRepository, lightDatabaseRepository)
 
-	err = lightService.TurnOn(light_controller.Room_Living)
-	if err != nil {
-		log.Fatal(err)
-	}
+	startServer(playerService, lightService)
 
-	sh(playerService)
+	// sh(playerService)
 }
 
 func lights(h light_controller.LightControllerRepository) {
@@ -63,8 +61,9 @@ func play(playerService service.PlayerService) {
 	}
 }
 
-func startServer(playerService service.PlayerService) {
-	server := resolver.NewHTTPServer(playerService)
+func startServer(playerService service.PlayerService, lightService service.LightService) {
+	server := resolver.NewHTTPServer(playerService, lightService)
+	fmt.Println("serving on port 8000")
 	server.StartHTTPServer(8000)
 }
 

@@ -31,6 +31,7 @@ type client struct {
 type ControlLightsInput struct {
 	EntityName string
 	State      LightState
+	Brightness *int
 }
 
 type ControlLightsResponse struct {
@@ -48,13 +49,17 @@ const (
 )
 
 func (m client) ControlLights(input ControlLightsInput) error {
-	requestBody := map[string]string{
+	requestBody := map[string]interface{}{
 		"entity_id": input.EntityName,
+	}
+	if input.Brightness != nil {
+		requestBody["brightness"] = *input.Brightness
 	}
 	jsonRequestBody, err := json.Marshal(requestBody)
 	if err != nil {
 		return err
 	}
+	fmt.Println(string(jsonRequestBody))
 	request, err := http.NewRequest("POST", m.BaseURL+"/api/services/light/turn_"+strings.ToLower(string(input.State)), bytes.NewBuffer(jsonRequestBody))
 	if err != nil {
 		return err

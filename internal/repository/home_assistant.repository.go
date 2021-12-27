@@ -22,6 +22,7 @@ func (m homeAssistantRepository) ControlLights(input domain.ControlLightsInput) 
 	controlLightsInput := home_assistant.ControlLightsInput{
 		EntityName: input.EntityName,
 		State:      home_assistant.LightState(input.State),
+		Brightness: input.Brightness,
 	}
 	err := m.Client.ControlLights(controlLightsInput)
 	if err != nil {

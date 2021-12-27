@@ -5,7 +5,7 @@
   ],
   "lights": {
     "SAHIL_BEDROOM": {
-      "homeAssistantEntityName": "",
+      "homeAssistantEntityName": "light.master_bedroom",
       "switchType": "ADJUSTABLE"
     },
     "LIVING": {
@@ -16,7 +16,56 @@
       ]
     },
     "KITCHEN": {
-
+      "homeAssistantEntityName": "light.kitchen",
+      "switchType": "ADJUSTABLE"
+    },
+    "DINING_ROOM": {
+      "homeAssistantEntityName": "light.dining_room",
+      "switchType": "ADJUSTABLE"
+    },
+    "PORCH": {
+      "homeAssistantEntityName": "light.front_porch",
+      "switchType": "ADJUSTABLE"
+    },
+    "ENTRY": {
+      "homeAssistantEntityName": "light.garage_entry",
+      "switchType": "ADJUSTABLE"
+    },
+    "GUEST_CLOSET": {
+      "homeAssistantEntityName": "light.guest_closet",
+      "switchType": "ADJUSTABLE"
+    },
+    "GUEST_BATHROOM": {
+      "homeAssistantEntityName": "light.guest_bathroom",
+      "switchType": "ADJUSTABLE"
+    },
+    "GUEST_BEDROOM": {
+      "homeAssistantEntityName": "light.guest_bedroom",
+      "switchType": "ADJUSTABLE"
+    },
+    "SAHIL_CLOSET": {
+      "homeAssistantEntityName": "light.master_closet",
+      "switchType": "ADJUSTABLE"
+    },
+    "SAHIL_BATHROOM": {
+      "homeAssistantEntityName": "light.master_bathroom",
+      "switchType": "ADJUSTABLE"
+    },
+    "DOWNSTAIRS_BATHROOM": {
+      "homeAssistantEntityName": "light.spare_bathroom",
+      "switchType": "ADJUSTABLE"
+    },
+    "STAIRCASE": {
+      "homeAssistantEntityName": "light.stairs",
+      "switchType": "ADJUSTABLE"
+    },
+    "STORAGE": {
+      "homeAssistantEntityName": "light.harry_potter_closet",
+      "switchType": "SWITCH"
+    },
+    "KITCHEN_ACCENT": {
+      "homeAssistantEntityName": "light.kitchen_cabinet",
+      "switchType": "SWITCH"
     }
   }
 }
