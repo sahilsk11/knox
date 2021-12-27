@@ -11,12 +11,14 @@ type LightsApp interface {
 }
 
 type lightsApp struct {
-	LightService service.LightService
+	LightService      service.LightService
+	ThermostatService service.ThermostatService
 }
 
-func NewLightsApp(lightService service.LightService) LightsApp {
+func NewLightsApp(lightService service.LightService, thermostatService service.ThermostatService) LightsApp {
 	return lightsApp{
-		LightService: lightService,
+		LightService:      lightService,
+		ThermostatService: thermostatService,
 	}
 }
 

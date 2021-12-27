@@ -8,11 +8,18 @@ import (
 	"github.com/sahilsk11/knox/pkg/home_assistant"
 )
 
+type HomeAssistantRepository interface {
+	ControlLights(input lights_domain.ControlLightsInput) error
+	SetTemperature(input thermostat_domain.SetTemperatureInput) error
+	TurnOffThermostat(entityName string) error
+	GetTemperature(entityName string) (*int, error)
+}
+
 type homeAssistantRepository struct {
 	Client home_assistant.Client
 }
 
-func NewHomeAssistantRepository(accessToken, baseURL string) lights_domain.LightControllerRepository {
+func NewHomeAssistantRepository(accessToken, baseURL string) HomeAssistantRepository {
 	client := home_assistant.NewClient(baseURL, accessToken)
 	return homeAssistantRepository{
 		Client: client,
@@ -70,4 +77,8 @@ func (m homeAssistantRepository) TurnOffThermostat(entityName string) error {
 	}
 
 	return nil
+}
+
+func (m homeAssistantRepository) GetTemperature(entityName string) (*int, error) {
+	return nil, nil
 }

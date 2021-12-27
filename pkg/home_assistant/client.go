@@ -106,7 +106,7 @@ func (m client) ControlThermostat(input ControlThermostatInput) error {
 	}
 
 	var controlType string
-	if input.State == ToggleState_On && input.TargetTemperature != nil {
+	if input.TargetTemperature != nil {
 		controlType = "set_temperature"
 		requestBody["temperature"] = *input.TargetTemperature
 	} else if input.State == ToggleState_On {

@@ -10,9 +10,10 @@ type ThermostatService interface {
 	SetTemperature(SetTemperatureInput) error
 }
 
-func NewThermostatService(thermostatRepository domain.ThermostatRepository) ThermostatService {
+func NewThermostatService(thermostatRepository domain.ThermostatRepository, thermostatDatabaseRepository repository.ThermostatDatabaseRepository) ThermostatService {
 	return thermostatService{
-		ThermostatRepository: thermostatRepository,
+		ThermostatRepository:         thermostatRepository,
+		ThermostatDatabaseRepository: thermostatDatabaseRepository,
 	}
 }
 
@@ -27,7 +28,7 @@ func (m thermostatService) TurnOff(thermostatName domain.ThermostatName) error {
 		return err
 	}
 
-	return m.ThermostatRepository.TurnOff(thermostat.HomeAssistantEntityName)
+	return m.ThermostatRepository.TurnOffThermostat(thermostat.HomeAssistantEntityName)
 }
 
 type SetTemperatureInput struct {

@@ -33,11 +33,16 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	thermostatDatabaseRepository, err := repository.NewThermostatDatabaseRepository("database/thermostat.json")
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	playerService := service.NewPlayerService(spotifyRepository)
 	lightService := service.NewLightService(homeAssistantRepository, lightDatabaseRepository)
+	thermostatService := service.NewThermostatService(homeAssistantRepository, thermostatDatabaseRepository)
 
-	lightApp := app.NewLightsApp(lightService)
+	lightApp := app.NewLightsApp(lightService, thermostatService)
 
 	startServer(playerService, lightService, lightApp)
 
