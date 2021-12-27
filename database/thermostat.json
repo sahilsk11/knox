@@ -1,0 +1,9 @@
+{
+  "thermostats": {
+    "SAHIL_THERMOSTAT": {
+      "homeAssistantEntityName": "climate.mysa_cc990c"
+    },
+    "GUEST_THERMOSTAT": {},
+    "LIVING_THERMOSTAT": {}
+  }
+}

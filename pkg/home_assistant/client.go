@@ -12,6 +12,7 @@ import (
 
 type Client interface {
 	ControlLights(ControlLightsInput) error
+	ControlThermostat(input ControlThermostatInput) error
 }
 
 func NewClient(baseURL, accessToken string) Client {
@@ -31,7 +32,7 @@ type client struct {
 type ControlLightsInput struct {
 	EntityName string
 	SwitchType SwitchType
-	State      LightState
+	State      ToggleState
 	Brightness *int
 }
 
@@ -43,17 +44,17 @@ const (
 )
 
 type ControlLightsResponse struct {
-	EntityName  string     `json:"entity_id"`
-	State       LightState `json:"state"`
-	LastChanged time.Time  `json:"last_changed"`
-	LastUpdated time.Time  `json:"last_updated"`
+	EntityName  string      `json:"entity_id"`
+	State       ToggleState `json:"state"`
+	LastChanged time.Time   `json:"last_changed"`
+	LastUpdated time.Time   `json:"last_updated"`
 }
 
-type LightState string
+type ToggleState string
 
 const (
-	LightState_On  LightState = "ON"
-	LightState_Off LightState = "OFF"
+	ToggleState_On  ToggleState = "ON"
+	ToggleState_Off ToggleState = "OFF"
 )
 
 func (m client) ControlLights(input ControlLightsInput) error {
@@ -74,6 +75,52 @@ func (m client) ControlLights(input ControlLightsInput) error {
 		input.SwitchType,
 		strings.ToLower(string(input.State)),
 	)
+
+	request, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonRequestBody))
+	if err != nil {
+		return fmt.Errorf("failed to create request - %s", err.Error())
+	}
+	request.Header.Add("Authorization", "Bearer "+m.AccessToken)
+
+	response, err := m.HTTPClient.Do(request)
+	if err != nil {
+		return fmt.Errorf("failed to complete request with %s - %s", string(jsonRequestBody), err.Error())
+	}
+	_, err = ioutil.ReadAll(response.Body)
+	if err != nil {
+		return fmt.Errorf("failed to read response - %s", err.Error())
+	}
+
+	return nil
+}
+
+type ControlThermostatInput struct {
+	State             ToggleState
+	TargetTemperature *int
+	EntityName        string
+}
+
+func (m client) ControlThermostat(input ControlThermostatInput) error {
+	requestBody := map[string]interface{}{
+		"entity_id": input.EntityName,
+	}
+
+	var controlType string
+	if input.State == ToggleState_On && input.TargetTemperature != nil {
+		controlType = "set_temperature"
+		requestBody["temperature"] = *input.TargetTemperature
+	} else if input.State == ToggleState_On {
+		controlType = "turn_on"
+	} else {
+		controlType = "turn_off"
+	}
+
+	jsonRequestBody, err := json.Marshal(requestBody)
+	if err != nil {
+		return err
+	}
+
+	url := fmt.Sprintf("%s/api/services/climate/%s", m.BaseURL, controlType)
 
 	request, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonRequestBody))
 	if err != nil {
