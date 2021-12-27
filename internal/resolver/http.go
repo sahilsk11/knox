@@ -17,20 +17,22 @@ type responseError struct {
 	ErrorMessage string `json:"error_message"`
 }
 
-func NewHTTPServer(playerService service.PlayerService, lightService service.LightService, lightsApp app.LightsApp) httpServer {
+func NewHTTPServer(playerService service.PlayerService, lightService service.LightService, lightsApp app.LightsApp, thermostatService service.ThermostatService) httpServer {
 	return httpServer{
-		PlayerService: playerService,
-		LightService:  lightService,
-		LightsApp:     lightsApp,
-		Logger:        log.Default(),
+		PlayerService:     playerService,
+		LightService:      lightService,
+		LightsApp:         lightsApp,
+		ThermostatService: thermostatService,
+		Logger:            log.Default(),
 	}
 }
 
 type httpServer struct {
-	PlayerService service.PlayerService
-	LightService  service.LightService
-	LightsApp     app.LightsApp
-	Logger        *log.Logger
+	PlayerService     service.PlayerService
+	LightService      service.LightService
+	LightsApp         app.LightsApp
+	ThermostatService service.ThermostatService
+	Logger            *log.Logger
 }
 
 func (m httpServer) loggingMiddleware(handler func([]byte) ([]byte, error)) http.Handler {
@@ -71,5 +73,6 @@ func (m httpServer) StartHTTPServer(port int) {
 	mux.Handle("/play", m.loggingMiddleware(m.play))
 	mux.Handle("/setBrightness", m.loggingMiddleware(m.setBrightness))
 	mux.Handle("/goodnight", m.loggingMiddleware(m.goodnight))
+	mux.Handle("/reduceHeat", m.loggingMiddleware(m.reduceHeat))
 	http.ListenAndServe(fmt.Sprintf(":%d", port), mux)
 }

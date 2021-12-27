@@ -57,6 +57,7 @@ func (m homeAssistantRepository) SetTemperature(input thermostat_domain.SetTempe
 
 	controlThermostatInput = home_assistant.ControlThermostatInput{
 		TargetTemperature: &input.TargetTemperature,
+		EntityName:        input.Thermostat.HomeAssistantEntityName,
 	}
 	err = m.Client.ControlThermostat(controlThermostatInput)
 	if err != nil {

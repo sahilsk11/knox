@@ -121,7 +121,8 @@ func (m client) ControlThermostat(input ControlThermostatInput) error {
 	}
 
 	url := fmt.Sprintf("%s/api/services/climate/%s", m.BaseURL, controlType)
-
+	fmt.Println(url)
+	fmt.Println(string(jsonRequestBody))
 	request, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonRequestBody))
 	if err != nil {
 		return fmt.Errorf("failed to create request - %s", err.Error())

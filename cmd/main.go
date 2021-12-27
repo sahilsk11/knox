@@ -44,9 +44,7 @@ func main() {
 
 	lightApp := app.NewLightsApp(lightService, thermostatService)
 
-	startServer(playerService, lightService, lightApp)
-
-	sh(playerService)
+	startServer(playerService, lightService, lightApp, thermostatService)
 }
 
 func lights(h light_controller.LightControllerRepository) {
@@ -69,8 +67,8 @@ func play(playerService service.PlayerService) {
 	}
 }
 
-func startServer(playerService service.PlayerService, lightService service.LightService, lightsApp app.LightsApp) {
-	server := resolver.NewHTTPServer(playerService, lightService, lightsApp)
+func startServer(playerService service.PlayerService, lightService service.LightService, lightsApp app.LightsApp, thermostatService service.ThermostatService) {
+	server := resolver.NewHTTPServer(playerService, lightService, lightsApp, thermostatService)
 	fmt.Println("serving on port 8000")
 	server.StartHTTPServer(8000)
 }

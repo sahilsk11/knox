@@ -10,5 +10,5 @@ const (
 
 type Thermostat struct {
 	ThermostatName          ThermostatName
-	HomeAssistantEntityName string
+	HomeAssistantEntityName string `json:"homeAssistantEntityName"`
 }
