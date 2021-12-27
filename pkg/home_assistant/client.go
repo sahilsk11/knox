@@ -49,13 +49,13 @@ const (
 
 func (m client) ControlLights(input ControlLightsInput) error {
 	requestBody := map[string]string{
-		"state": strings.ToLower(string(input.State)),
+		"entity_id": input.EntityName,
 	}
 	jsonRequestBody, err := json.Marshal(requestBody)
 	if err != nil {
 		return err
 	}
-	request, err := http.NewRequest("POST", m.BaseURL+"/api/states/"+input.EntityName, bytes.NewBuffer(jsonRequestBody))
+	request, err := http.NewRequest("POST", m.BaseURL+"/api/services/light/turn_"+strings.ToLower(string(input.State)), bytes.NewBuffer(jsonRequestBody))
 	if err != nil {
 		return err
 	}

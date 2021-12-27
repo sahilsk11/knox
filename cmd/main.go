@@ -17,18 +17,18 @@ func main() {
 		log.Fatalf("failed to load config: %s", err.Error())
 	}
 
-	// spotifyRepository := repository.NewSpotifyRepository(
-	// 	config.SpotifyConfig.AccessToken,
-	// 	config.SpotifyConfig.RefreshToken,
-	// 	config.SpotifyConfig.TokenExpiry,
-	// 	config.SpotifyConfig.ClientID,
-	// )
-	homeAssistantRepository := repository.NewHomeAssistantRepository(
-		config.HomeAssistantConfig.AccessToken, config.HomeAssistantConfig.BaseURL,
+	spotifyRepository := repository.NewSpotifyRepository(
+		config.SpotifyConfig.AccessToken,
+		config.SpotifyConfig.RefreshToken,
+		config.SpotifyConfig.TokenExpiry,
+		config.SpotifyConfig.ClientID,
 	)
-	// playerService := service.NewPlayerService(spotifyRepository)
+	// homeAssistantRepository := repository.NewHomeAssistantRepository(
+	// 	config.HomeAssistantConfig.AccessToken, config.HomeAssistantConfig.BaseURL,
+	// )
+	playerService := service.NewPlayerService(spotifyRepository)
 
-	lights(homeAssistantRepository)
+	startServer(playerService)
 }
 
 func lights(h light_controller.LightControllerRepository) {

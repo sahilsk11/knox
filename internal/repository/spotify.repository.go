@@ -28,6 +28,7 @@ func NewSpotifyRepository(accessToken, refreshToken string, tokenExpiryUnix int6
 			clientID,
 		)
 		if err != nil {
+			fmt.Println("hiufrhieu")
 			log.Fatal(err)
 		}
 		accessToken = s.AccessToken

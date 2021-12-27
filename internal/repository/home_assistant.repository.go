@@ -20,7 +20,7 @@ func NewHomeAssistantRepository(accessToken, baseURL string) domain.LightControl
 
 func (m homeAssistantRepository) ControlLights(input domain.ControlLightsInput) error {
 	controlLightsInput := home_assistant.ControlLightsInput{
-		EntityName: "light.kitchen",
+		EntityName: "light.guest_bedroom",
 		State:      home_assistant.LightState_Off,
 	}
 	err := m.Client.ControlLights(controlLightsInput)

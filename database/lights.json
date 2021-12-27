@@ -1,0 +1,19 @@
+{
+  "comments": [
+    "the domain name must be updated here and in the domain definition in internal/domain/lights",
+    "each entry is keyed by the domain name"
+  ],
+  "lights": {
+    "SAHIL_BEDROOM": {
+      "homeAssistantEntityName": "",
+      "switchType": "ADJUSTABLE"
+    },
+    "LIVING": {
+      "homeAssistantEntityName": "",
+      "switchType": "ADJUSTABLE",
+      "comments": [
+        "the living room chandelier"
+      ]
+    }
+  }
+}

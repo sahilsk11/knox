@@ -4,4 +4,8 @@ type LightControllerRepository interface {
 	ControlLights(input ControlLightsInput) error
 }
 
-type ControlLightsInput struct{}
+type ControlLightsInput struct {
+	EntityName string
+	Intensity  *int
+	State      LightState
+}
