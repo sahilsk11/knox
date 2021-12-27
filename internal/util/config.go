@@ -30,6 +30,7 @@ func LoadConfig(filepath string) (*Config, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to open config file: %s", err.Error())
 	}
+	defer jsonFile.Close()
 
 	byteValue, err := ioutil.ReadAll(jsonFile)
 	if err != nil {

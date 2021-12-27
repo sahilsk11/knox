@@ -29,6 +29,7 @@ func NewLightDatabaseRepository(filepath string) (LightDatabaseRepository, error
 	if err != nil {
 		return nil, fmt.Errorf("failed to open light db file: %s", err.Error())
 	}
+	defer jsonFile.Close()
 
 	byteValue, err := ioutil.ReadAll(jsonFile)
 	if err != nil {
