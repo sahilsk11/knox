@@ -23,12 +23,24 @@ func main() {
 		config.SpotifyConfig.TokenExpiry,
 		config.SpotifyConfig.ClientID,
 	)
-	// homeAssistantRepository := repository.NewHomeAssistantRepository(
-	// 	config.HomeAssistantConfig.AccessToken, config.HomeAssistantConfig.BaseURL,
-	// )
-	playerService := service.NewPlayerService(spotifyRepository)
 
-	startServer(playerService)
+	homeAssistantRepository := repository.NewHomeAssistantRepository(
+		config.HomeAssistantConfig.AccessToken, config.HomeAssistantConfig.BaseURL,
+	)
+	lightDatabaseRepository, err := repository.NewLightDatabaseRepository("database/lights.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	playerService := service.NewPlayerService(spotifyRepository)
+	lightService := service.NewLightService(homeAssistantRepository, lightDatabaseRepository)
+
+	err = lightService.TurnOn(light_controller.Room_Living)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	sh(playerService)
 }
 
 func lights(h light_controller.LightControllerRepository) {
@@ -55,3 +67,5 @@ func startServer(playerService service.PlayerService) {
 	server := resolver.NewHTTPServer(playerService)
 	server.StartHTTPServer(8000)
 }
+
+func sh(playerService service.PlayerService) {}

@@ -17,8 +17,13 @@ type lightDatabaseRepository struct {
 	LightDatabase map[domain.RoomName]domain.Light
 }
 
+type lightDatabase struct {
+	Comments []string                         `json:"comments"`
+	Lights   map[domain.RoomName]domain.Light `json:"lights"`
+}
+
 func NewLightDatabaseRepository(filepath string) (LightDatabaseRepository, error) {
-	m := lightDatabaseRepository{}
+	m := lightDatabase{}
 
 	jsonFile, err := os.Open(filepath)
 	if err != nil {
@@ -35,7 +40,9 @@ func NewLightDatabaseRepository(filepath string) (LightDatabaseRepository, error
 		return nil, fmt.Errorf("failed to load light db: %s", err.Error())
 	}
 
-	return m, nil
+	return lightDatabaseRepository{
+		LightDatabase: m.Lights,
+	}, nil
 }
 
 func (m lightDatabaseRepository) GetRoom(roomName domain.RoomName) (*domain.Light, error) {

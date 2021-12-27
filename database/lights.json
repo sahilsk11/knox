@@ -9,11 +9,14 @@
       "switchType": "ADJUSTABLE"
     },
     "LIVING": {
-      "homeAssistantEntityName": "",
+      "homeAssistantEntityName": "light.living_room",
       "switchType": "ADJUSTABLE",
       "comments": [
         "the living room chandelier"
       ]
+    },
+    "KITCHEN": {
+
     }
   }
 }

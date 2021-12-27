@@ -18,9 +18,10 @@ type lightService struct {
 	LightDatabaseRepository repository.LightDatabaseRepository
 }
 
-func NewLightService(lightRepository domain.LightControllerRepository) LightService {
+func NewLightService(lightRepository domain.LightControllerRepository, lightDatabaseRepository repository.LightDatabaseRepository) LightService {
 	return lightService{
-		LightRepository: lightRepository,
+		LightRepository:         lightRepository,
+		LightDatabaseRepository: lightDatabaseRepository,
 	}
 }
 
@@ -33,6 +34,8 @@ func (m lightService) SetBrightness(input SetBrightnessInput) error {
 	room, err := m.LightDatabaseRepository.GetRoom(input.RoomName)
 	if err != nil {
 		return err
+	} else if room.HomeAssistantEntityName == "" {
+		return fmt.Errorf("%s missing home assistant name definition", string(input.RoomName))
 	}
 	if room.SwitchType != domain.SwitchType_Adjustable {
 		return fmt.Errorf("cannot adjust brightness of %s - switch type is not adjustable", string(input.RoomName))
@@ -55,6 +58,8 @@ func (m lightService) TurnOff(roomName domain.RoomName) error {
 	room, err := m.LightDatabaseRepository.GetRoom(roomName)
 	if err != nil {
 		return err
+	} else if room.HomeAssistantEntityName == "" {
+		return fmt.Errorf("%s missing home assistant name definition", string(roomName))
 	}
 
 	controlLightsInput := domain.ControlLightsInput{
@@ -73,6 +78,8 @@ func (m lightService) TurnOn(roomName domain.RoomName) error {
 	room, err := m.LightDatabaseRepository.GetRoom(roomName)
 	if err != nil {
 		return err
+	} else if room.HomeAssistantEntityName == "" {
+		return fmt.Errorf("%s missing home assistant name definition", string(roomName))
 	}
 
 	controlLightsInput := domain.ControlLightsInput{
