@@ -21,6 +21,7 @@ func NewHTTPServer(playerService service.PlayerService, lightService service.Lig
 	return httpServer{
 		PlayerService: playerService,
 		LightService:  lightService,
+		LightsApp:     lightsApp,
 		Logger:        log.Default(),
 	}
 }
