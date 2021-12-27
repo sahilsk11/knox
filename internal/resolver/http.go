@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/sahilsk11/knox/internal/app"
 	"github.com/sahilsk11/knox/internal/service"
 )
 
@@ -16,7 +17,7 @@ type responseError struct {
 	ErrorMessage string `json:"error_message"`
 }
 
-func NewHTTPServer(playerService service.PlayerService, lightService service.LightService) httpServer {
+func NewHTTPServer(playerService service.PlayerService, lightService service.LightService, lightsApp app.LightsApp) httpServer {
 	return httpServer{
 		PlayerService: playerService,
 		LightService:  lightService,
@@ -27,6 +28,7 @@ func NewHTTPServer(playerService service.PlayerService, lightService service.Lig
 type httpServer struct {
 	PlayerService service.PlayerService
 	LightService  service.LightService
+	LightsApp     app.LightsApp
 	Logger        *log.Logger
 }
 
@@ -67,5 +69,6 @@ func (m httpServer) StartHTTPServer(port int) {
 	mux.Handle("/listGenres", m.loggingMiddleware(m.listGenres))
 	mux.Handle("/play", m.loggingMiddleware(m.play))
 	mux.Handle("/setBrightness", m.loggingMiddleware(m.setBrightness))
+	mux.Handle("/goodnight", m.loggingMiddleware(m.goodnight))
 	http.ListenAndServe(fmt.Sprintf(":%d", port), mux)
 }
