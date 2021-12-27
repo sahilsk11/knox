@@ -23,3 +23,9 @@ const (
 	LightState_On  LightState = "ON"
 	LightState_Off LightState = "OFF"
 )
+
+type Light struct {
+	RoomName                RoomName
+	SwitchType              RoomSwitchType `json:"switchType"`
+	HomeAssistantEntityName string         `json:"homeAssistantEntityName"`
+}
