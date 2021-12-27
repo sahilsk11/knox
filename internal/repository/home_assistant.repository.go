@@ -20,9 +20,14 @@ func NewHomeAssistantRepository(accessToken, baseURL string) domain.LightControl
 
 func (m homeAssistantRepository) ControlLights(input domain.ControlLightsInput) error {
 	controlLightsInput := home_assistant.ControlLightsInput{
-		EntityName: input.EntityName,
+		EntityName: input.Light.HomeAssistantEntityName,
 		State:      home_assistant.LightState(input.State),
 		Brightness: input.Brightness,
+	}
+	if input.Light.SwitchType == domain.SwitchType_Switch {
+		controlLightsInput.SwitchType = home_assistant.SwitchType_Switch
+	} else {
+		controlLightsInput.SwitchType = home_assistant.SwitchType_Light
 	}
 	err := m.Client.ControlLights(controlLightsInput)
 	if err != nil {

@@ -60,11 +60,11 @@
       "switchType": "ADJUSTABLE"
     },
     "STORAGE": {
-      "homeAssistantEntityName": "light.harry_potter_closet",
+      "homeAssistantEntityName": "switch.harry_potter_closet",
       "switchType": "SWITCH"
     },
     "KITCHEN_ACCENT": {
-      "homeAssistantEntityName": "light.kitchen_cabinet",
+      "homeAssistantEntityName": "switch.kitchen_cabinet",
       "switchType": "SWITCH"
     }
   }

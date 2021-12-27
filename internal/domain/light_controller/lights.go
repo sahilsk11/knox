@@ -2,21 +2,23 @@ package light_controller
 
 type LightName string
 
-// decided to not list all the enum types and validate in the db instead
-
-// const (
-// 	Light_Sahil_BedLight LightName = "SAHIL_BEDLight"
-// 	Light_Living         LightName = "LIVING"
-// 	Light_Kitchen        LightName = "KITCHEN"
-// 	Light_Dining         LightName = "DINING_LIGHT"
-// 	Light_Porch          LightName = "PORCH"
-// 	Light_Entry          LightName = "ENTRY"
-// 	Light_Guest_Closet   LightName = "GUEST_CLOSET"
-// 	Light_Guest_Bathroom LightName = "GUEST_BATHROOM"
-// 	Light_Guest_Bedroom  LightName = "GUEST_BEDROOM"
-// 	Light_Sahil_Closet   LightName = "SAHIL_CLOSET"
-
-// )
+const (
+	Light_Sahil_Bedroom       LightName = "SAHIL_BEDROOM"
+	Light_Living              LightName = "LIVING"
+	Light_Kitchen             LightName = "KITCHEN"
+	Light_Dining              LightName = "DINING_ROOM"
+	Light_Porch               LightName = "PORCH"
+	Light_Entry               LightName = "ENTRY"
+	Light_Guest_Closet        LightName = "GUEST_CLOSET"
+	Light_Guest_Bathroom      LightName = "GUEST_BATHROOM"
+	Light_Guest_Bedroom       LightName = "GUEST_BEDROOM"
+	Light_Sahil_Closet        LightName = "SAHIL_CLOSET"
+	Light_Sahil_Bathroom      LightName = "SAHIL_BATHROOM"
+	Light_Downstairs_Bathroom LightName = "DOWNSTAIRS_BATHROOM"
+	Light_Staircase           LightName = "STAIRCASE"
+	Light_Storage             LightName = "STORAGE"
+	Light_Kitchen_Accent      LightName = "KITCHEN_ACCENT"
+)
 
 type LightSwitchType string
 

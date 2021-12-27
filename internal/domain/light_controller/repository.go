@@ -5,7 +5,7 @@ type LightControllerRepository interface {
 }
 
 type ControlLightsInput struct {
-	EntityName string
+	Light      Light
 	Brightness *int
 	State      LightState
 }

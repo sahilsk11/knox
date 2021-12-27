@@ -30,9 +30,17 @@ type client struct {
 
 type ControlLightsInput struct {
 	EntityName string
+	SwitchType SwitchType
 	State      LightState
 	Brightness *int
 }
+
+type SwitchType string
+
+const (
+	SwitchType_Light  SwitchType = "light"
+	SwitchType_Switch SwitchType = "switch"
+)
 
 type ControlLightsResponse struct {
 	EntityName  string     `json:"entity_id"`
@@ -59,23 +67,28 @@ func (m client) ControlLights(input ControlLightsInput) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(string(jsonRequestBody))
-	request, err := http.NewRequest("POST", m.BaseURL+"/api/services/light/turn_"+strings.ToLower(string(input.State)), bytes.NewBuffer(jsonRequestBody))
+
+	url := fmt.Sprintf(
+		"%s/api/services/%s/turn_%s",
+		m.BaseURL,
+		input.SwitchType,
+		strings.ToLower(string(input.State)),
+	)
+
+	request, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonRequestBody))
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to create request - %s", err.Error())
 	}
 	request.Header.Add("Authorization", "Bearer "+m.AccessToken)
 
 	response, err := m.HTTPClient.Do(request)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to complete request with %s - %s", string(jsonRequestBody), err.Error())
 	}
-	responseBytes, err := ioutil.ReadAll(response.Body)
+	_, err = ioutil.ReadAll(response.Body)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to read response - %s", err.Error())
 	}
-
-	fmt.Println(string(responseBytes))
 
 	return nil
 }

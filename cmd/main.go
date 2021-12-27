@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/sahilsk11/knox/internal/app"
 	"github.com/sahilsk11/knox/internal/domain/light_controller"
 	"github.com/sahilsk11/knox/internal/domain/player"
 	"github.com/sahilsk11/knox/internal/repository"
@@ -36,9 +37,16 @@ func main() {
 	playerService := service.NewPlayerService(spotifyRepository)
 	lightService := service.NewLightService(homeAssistantRepository, lightDatabaseRepository)
 
-	startServer(playerService, lightService)
+	lightApp := app.NewLightsApp(lightService)
 
-	// sh(playerService)
+	err = lightApp.GoodnightScene()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// startServer(playerService, lightService)
+
+	sh(playerService)
 }
 
 func lights(h light_controller.LightControllerRepository) {
