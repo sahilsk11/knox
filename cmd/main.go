@@ -39,12 +39,7 @@ func main() {
 
 	lightApp := app.NewLightsApp(lightService)
 
-	err = lightApp.GoodnightScene()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// startServer(playerService, lightService)
+	startServer(playerService, lightService, lightApp)
 
 	sh(playerService)
 }
@@ -69,8 +64,8 @@ func play(playerService service.PlayerService) {
 	}
 }
 
-func startServer(playerService service.PlayerService, lightService service.LightService) {
-	server := resolver.NewHTTPServer(playerService, lightService)
+func startServer(playerService service.PlayerService, lightService service.LightService, lightsApp app.LightsApp) {
+	server := resolver.NewHTTPServer(playerService, lightService, lightsApp)
 	fmt.Println("serving on port 8000")
 	server.StartHTTPServer(8000)
 }
