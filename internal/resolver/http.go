@@ -71,6 +71,7 @@ func (m httpServer) authMiddleware() gin.HandlerFunc {
 			returnErrorJson(errors.New("missing authorization header"), c)
 		}
 		authToken := strings.Replace(header.Authorization, "Bearer ", "", 1)
+
 		if authToken != m.AuthToken {
 			c.AbortWithStatusJSON(403, gin.H{"error": "invalid auth header"})
 		}

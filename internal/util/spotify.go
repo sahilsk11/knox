@@ -10,6 +10,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/sahilsk11/knox/config"
 )
 
 // hacky library to save and update access and refresh token
@@ -56,7 +58,7 @@ type spotifyRefreshResponse struct {
 }
 
 func writebackConfig(c spotifyRefreshResponse) error {
-	config, err := LoadConfig("config/keys.json")
+	config, err := config.LoadConfig("config/keys.json")
 	if err != nil {
 		return fmt.Errorf("failed to load config file - %s", err.Error())
 	}
