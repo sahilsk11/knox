@@ -1,22 +1,14 @@
 package resolver
 
 import (
-	"encoding/json"
+	"github.com/gin-gonic/gin"
 )
 
-func (m httpServer) goodnight([]byte) ([]byte, error) {
+func (m httpServer) goodnight(c *gin.Context) {
 	err := m.LightsApp.GoodnightScene()
 	if err != nil {
-		return nil, err
+		returnErrorJson(err, c)
 	}
 
-	response := map[string]string{
-		"success": "true",
-	}
-	responseBody, err := json.Marshal(response)
-	if err != nil {
-		return nil, err
-	}
-
-	return responseBody, nil
+	c.JSON(200, gin.H{"success": "true"})
 }

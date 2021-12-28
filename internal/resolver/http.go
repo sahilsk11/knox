@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gin-gonic/gin"
 	"github.com/sahilsk11/knox/internal/app"
 	"github.com/sahilsk11/knox/internal/service"
 )
@@ -67,12 +68,28 @@ func (m httpServer) loggingMiddleware(handler func([]byte) ([]byte, error)) http
 }
 
 func (m httpServer) StartHTTPServer(port int) {
-	mux := http.NewServeMux()
-	mux.Handle("/listDevices", m.loggingMiddleware(m.listDevices))
-	mux.Handle("/listGenres", m.loggingMiddleware(m.listGenres))
-	mux.Handle("/play", m.loggingMiddleware(m.play))
-	mux.Handle("/setBrightness", m.loggingMiddleware(m.setBrightness))
-	mux.Handle("/goodnight", m.loggingMiddleware(m.goodnight))
-	mux.Handle("/reduceHeat", m.loggingMiddleware(m.reduceHeat))
-	http.ListenAndServe(fmt.Sprintf(":%d", port), mux)
+	router := gin.New()
+
+	// music player routes
+	router.GET("player/listDevices", m.listDevices)
+	router.GET("player/listGenres", m.listGenres)
+	router.POST("player/play", m.play)
+
+	// light controller routes
+	router.POST("lights/setBrightness", m.setBrightness)
+
+	// scene routes
+	router.GET("scenes/goodnight", m.goodnight)
+
+	// mux.Handle("/reduceHeat", m.loggingMiddleware(m.reduceHeat))
+
+	// wrappedMux
+
+	router.Run(fmt.Sprintf(":%d", port))
+}
+
+func returnErrorJson(err error, c *gin.Context) {
+	c.JSON(400, gin.H{
+		"error": err.Error(),
+	})
 }

@@ -1,9 +1,7 @@
 package resolver
 
 import (
-	"encoding/json"
-	"fmt"
-
+	"github.com/gin-gonic/gin"
 	"github.com/sahilsk11/knox/internal/domain/light_controller"
 	"github.com/sahilsk11/knox/internal/service"
 )
@@ -13,30 +11,22 @@ type setBrightnessRequestBody struct {
 	Brightness int                        `json:"brightness"`
 }
 
-func (m httpServer) setBrightness(requestBody []byte) ([]byte, error) {
-	input := setBrightnessRequestBody{}
+func (m httpServer) setBrightness(c *gin.Context) {
+	var requestBody setBrightnessRequestBody
 
-	err := json.Unmarshal(requestBody, &input)
-	if err != nil {
-		return nil, fmt.Errorf("failed to unmarshal body %s - %s", string(requestBody), err.Error())
+	if err := c.ShouldBindJSON(&requestBody); err != nil {
+		returnErrorJson(err, c)
+		return
 	}
 
 	setBrightnessInput := service.SetBrightnessInput{
-		LightName:  input.LightName,
-		Brightness: input.Brightness,
+		LightName:  requestBody.LightName,
+		Brightness: requestBody.Brightness,
 	}
-	err = m.LightService.SetBrightness(setBrightnessInput)
+	err := m.LightService.SetBrightness(setBrightnessInput)
 	if err != nil {
-		return nil, err
+		returnErrorJson(err, c)
 	}
 
-	response := map[string]string{
-		"success": "true",
-	}
-	responseBody, err := json.Marshal(response)
-	if err != nil {
-		return nil, err
-	}
-
-	return responseBody, nil
+	c.JSON(200, gin.H{"success": "true"})
 }

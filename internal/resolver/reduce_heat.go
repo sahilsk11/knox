@@ -1,9 +1,7 @@
 package resolver
 
 import (
-	"encoding/json"
-	"fmt"
-
+	"github.com/gin-gonic/gin"
 	domain "github.com/sahilsk11/knox/internal/domain/thermostat"
 	"github.com/sahilsk11/knox/internal/service"
 )
@@ -12,30 +10,24 @@ type reduceHeatRequest struct {
 	ThermostatName domain.ThermostatName `json:"thermostatName"`
 }
 
-func (m httpServer) reduceHeat(requestBody []byte) ([]byte, error) {
-	input := reduceHeatRequest{}
+func (m httpServer) reduceHeat(c *gin.Context) {
+	var requestBody reduceHeatRequest
 
-	err := json.Unmarshal(requestBody, &input)
+	err := c.ShouldBindJSON(requestBody)
 	if err != nil {
-		return nil, fmt.Errorf("failed to unmarshal body %s - %s", string(requestBody), err.Error())
+		returnErrorJson(err, c)
+		return
 	}
 
 	setTemperatureInput := service.SetTemperatureInput{
-		ThermostatName:    input.ThermostatName,
+		ThermostatName:    requestBody.ThermostatName,
 		TargetTemperature: 60,
 	}
 	err = m.ThermostatService.SetTemperature(setTemperatureInput)
 	if err != nil {
-		return nil, err
+		returnErrorJson(err, c)
+		return
 	}
 
-	response := map[string]string{
-		"success": "true",
-	}
-	responseBody, err := json.Marshal(response)
-	if err != nil {
-		return nil, err
-	}
-
-	return responseBody, nil
+	c.JSON(200, gin.H{"success": "true"})
 }

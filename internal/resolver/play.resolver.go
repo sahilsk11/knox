@@ -1,10 +1,10 @@
 package resolver
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 
+	"github.com/gin-gonic/gin"
 	"github.com/sahilsk11/knox/internal/domain/player"
 	"github.com/sahilsk11/knox/internal/service"
 )
@@ -17,30 +17,26 @@ type playRequest struct {
 type playResponse struct {
 }
 
-func (m httpServer) play(requestBody []byte) ([]byte, error) {
-	request := playRequest{}
-	err := json.Unmarshal(requestBody, &request)
-	if err != nil {
-		return nil, fmt.Errorf("[play resolver] could not decode request body %s : %s", string(requestBody), err.Error())
+func (m httpServer) play(c *gin.Context) {
+	var requestBody playRequest
+
+	if err := c.ShouldBindJSON(&requestBody); err != nil {
+		returnErrorJson(err, c)
+		return
 	}
-	genre := strings.ToUpper(strings.ReplaceAll(request.Genre, " ", "_"))
 
-	m.Logger.Printf("starting %s on %s", genre, request.DeviceID)
+	genre := strings.ToUpper(strings.ReplaceAll(requestBody.Genre, " ", "_"))
 
-	err = m.PlayerService.StartPlayback(service.StartPlaybackInput{
+	startPlaybackInput := service.StartPlaybackInput{
 		DeviceFilter: service.DeviceFilter{
-			DeviceID: &request.DeviceID,
+			DeviceID: &requestBody.DeviceID,
 		},
 		Genre: player.PlaybackGenre(genre),
-	})
+	}
+	err := m.PlayerService.StartPlayback(startPlaybackInput)
 	if err != nil {
-		return nil, fmt.Errorf("[play resolver] could not start playback %s", err.Error())
+		returnErrorJson(fmt.Errorf("[play resolver] could not start playback %s", err.Error()), c)
 	}
 
-	jsonResponse, err := json.Marshal(playResponse{})
-	if err != nil {
-		return nil, fmt.Errorf("[play resolver] could not marshal response struct %v : %s", playResponse{}, err.Error())
-	}
-
-	return jsonResponse, nil
+	c.JSON(200, gin.H{"success": "true"})
 }

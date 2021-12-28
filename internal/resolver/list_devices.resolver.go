@@ -1,8 +1,7 @@
 package resolver
 
 import (
-	"encoding/json"
-
+	"github.com/gin-gonic/gin"
 	"github.com/sahilsk11/knox/internal/domain/player"
 )
 
@@ -10,19 +9,15 @@ type listDevicesResponse struct {
 	Devices []player.PlayerDevice `json:"devices"`
 }
 
-func (m httpServer) listDevices([]byte) ([]byte, error) {
+func (m httpServer) listDevices(c *gin.Context) {
 	devices, err := m.PlayerService.ListAvailableDevices()
 	if err != nil {
-		return nil, err
+		returnErrorJson(err, c)
+		return
 	}
 	response := listDevicesResponse{
 		Devices: devices,
 	}
 
-	jsonResponse, err := json.Marshal(response)
-	if err != nil {
-		return nil, err
-	}
-
-	return jsonResponse, nil
+	c.JSON(200, response)
 }

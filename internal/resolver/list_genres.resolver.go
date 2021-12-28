@@ -1,19 +1,22 @@
 package resolver
 
 import (
-	"encoding/json"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 type listGenresResponse struct {
 	Genres []string `json:"genres"`
 }
 
-func (m httpServer) listGenres([]byte) ([]byte, error) {
+func (m httpServer) listGenres(c *gin.Context) {
 	genres, err := m.PlayerService.ListGenres()
 	if err != nil {
-		return nil, err
+		returnErrorJson(err, c)
+		return
 	}
+
 	genresStr := make([]string, len(genres))
 	for i, genre := range genres {
 		genresStr[i] = strings.ReplaceAll(strings.ToLower(string(genre)), "_", " ")
@@ -22,10 +25,5 @@ func (m httpServer) listGenres([]byte) ([]byte, error) {
 		Genres: genresStr,
 	}
 
-	jsonResponse, err := json.Marshal(response)
-	if err != nil {
-		return nil, err
-	}
-
-	return jsonResponse, nil
+	c.JSON(200, response)
 }
