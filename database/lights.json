@@ -19,7 +19,7 @@
       "homeAssistantEntityName": "light.kitchen",
       "switchType": "ADJUSTABLE"
     },
-    "DINING_ROOM": {
+    "DINING": {
       "homeAssistantEntityName": "light.dining_room",
       "switchType": "ADJUSTABLE"
     },

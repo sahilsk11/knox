@@ -6,7 +6,7 @@ const (
 	Light_Sahil_Bedroom       LightName = "SAHIL_BEDROOM"
 	Light_Living              LightName = "LIVING"
 	Light_Kitchen             LightName = "KITCHEN"
-	Light_Dining              LightName = "DINING_ROOM"
+	Light_Dining              LightName = "DINING"
 	Light_Porch               LightName = "PORCH"
 	Light_Entry               LightName = "ENTRY"
 	Light_Guest_Closet        LightName = "GUEST_CLOSET"
