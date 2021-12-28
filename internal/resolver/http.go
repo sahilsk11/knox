@@ -18,6 +18,7 @@ type responseError struct {
 func NewHTTPServer(authToken string, playerService service.PlayerService, lightService service.LightService, lightsApp app.LightsApp, thermostatService service.ThermostatService) httpServer {
 	return httpServer{
 		AuthToken:         authToken,
+		AuthEnabled:       false,
 		PlayerService:     playerService,
 		LightService:      lightService,
 		LightsApp:         lightsApp,
@@ -27,6 +28,7 @@ func NewHTTPServer(authToken string, playerService service.PlayerService, lightS
 
 type httpServer struct {
 	AuthToken         string
+	AuthEnabled       bool
 	PlayerService     service.PlayerService
 	LightService      service.LightService
 	LightsApp         app.LightsApp
@@ -68,13 +70,15 @@ type authHeader struct {
 
 func (m httpServer) authMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+
 		var header authHeader
 		if err := c.ShouldBindHeader(&header); err != nil {
 			returnErrorJson(errors.New("missing authorization header"), c)
 		}
 		authToken := strings.Replace(header.Authorization, "Bearer ", "", 1)
 
-		if authToken != m.AuthToken {
+		if m.AuthEnabled && authToken != m.AuthToken {
 			c.AbortWithStatusJSON(403, gin.H{"error": "invalid auth header"})
 		}
 	}

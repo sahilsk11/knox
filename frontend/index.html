@@ -2,7 +2,9 @@
   <head>
     <script>
       function loadDevices() {
-        fetch('http://localhost:8000/listDevices')
+        fetch('http://localhost:8000/player/listDevices', {
+          "Authorization": "Bearer"
+        })
         .then(response => response.json())
         .then(data => {
           devicesDropdown = document.getElementById('devices');
@@ -10,7 +12,9 @@
             devicesDropdown.options[devicesDropdown.options.length] = new Option(device.device_name, device.device_id)
           })
         });
-        fetch('http://localhost:8000/listGenres')
+        fetch('http://localhost:8000/player/listGenres', {
+          "Authorization": "Bearer"
+        })
         .then(response => response.json())
         .then(data => {
           devicesDropdown = document.getElementById('genre');
@@ -23,7 +27,8 @@
       function play() {
         device = document.getElementById('devices').value;
         genre = document.getElementById('genre').value;
-        fetch('http://localhost:8000/play', {
+        fetch('http://localhost:8000/player/play', {
+          Authorization: "Bearer",
           method: "POST",
           mode: "no-cors",
           headers: {
