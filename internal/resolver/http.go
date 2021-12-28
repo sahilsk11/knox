@@ -44,6 +44,7 @@ func (m httpServer) StartHTTPServer(port int) {
 
 	// light controller routes
 	router.POST("/lights/setBrightness", m.setBrightness)
+	router.POST("/lights/toggleLight", m.toggleLight)
 
 	// scene routes
 	router.POST("/scenes/goodnight", m.goodnight)
