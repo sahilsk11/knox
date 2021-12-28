@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/sahilsk11/knox/config"
 	"github.com/sahilsk11/knox/internal/app"
 	"github.com/sahilsk11/knox/internal/domain/light_controller"
 	"github.com/sahilsk11/knox/internal/domain/player"
@@ -14,7 +15,7 @@ import (
 )
 
 func main() {
-	config, err := util.LoadConfig("config/keys.json")
+	config, err := config.LoadConfig("config/keys.json")
 	if err != nil {
 		log.Fatalf("failed to load config: %s", err.Error())
 	}
@@ -38,13 +39,15 @@ func main() {
 		log.Fatal(err)
 	}
 
+	authToken := config.Authentication.AuthToken
+
 	playerService := service.NewPlayerService(spotifyRepository)
 	lightService := service.NewLightService(homeAssistantRepository, lightDatabaseRepository)
 	thermostatService := service.NewThermostatService(homeAssistantRepository, thermostatDatabaseRepository)
 
 	lightApp := app.NewLightsApp(lightService, thermostatService)
 
-	startServer(playerService, lightService, lightApp, thermostatService)
+	startServer(authToken, playerService, lightService, lightApp, thermostatService)
 }
 
 func lights(h light_controller.LightControllerRepository) {
@@ -67,8 +70,8 @@ func play(playerService service.PlayerService) {
 	}
 }
 
-func startServer(playerService service.PlayerService, lightService service.LightService, lightsApp app.LightsApp, thermostatService service.ThermostatService) {
-	server := resolver.NewHTTPServer(playerService, lightService, lightsApp, thermostatService)
+func startServer(authToken string, playerService service.PlayerService, lightService service.LightService, lightsApp app.LightsApp, thermostatService service.ThermostatService) {
+	server := resolver.NewHTTPServer(authToken, playerService, lightService, lightsApp, thermostatService)
 	fmt.Println("serving on port 8000")
 	server.StartHTTPServer(8000)
 }

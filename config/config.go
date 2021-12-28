@@ -1,4 +1,4 @@
-package util
+package config
 
 import (
 	"encoding/json"
@@ -8,8 +8,9 @@ import (
 )
 
 type Config struct {
-	SpotifyConfig       SpotifyConfig       `json:"spotify"`
-	HomeAssistantConfig HomeAssistantConfig `json:"home_assistant"`
+	SpotifyConfig       SpotifyConfig        `json:"spotify"`
+	HomeAssistantConfig HomeAssistantConfig  `json:"home_assistant"`
+	Authentication      AuthenticationConfig `json:"authentication"`
 }
 
 type SpotifyConfig struct {
@@ -23,6 +24,10 @@ type SpotifyConfig struct {
 type HomeAssistantConfig struct {
 	AccessToken string `json:"accessToken"`
 	BaseURL     string `json:"baseURL"`
+}
+
+type AuthenticationConfig struct {
+	AuthToken string `json:"authToken"`
 }
 
 func LoadConfig(filepath string) (*Config, error) {
