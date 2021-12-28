@@ -56,6 +56,7 @@ func (m httpServer) StartHTTPServer(port int) {
 }
 
 func returnErrorJson(err error, c *gin.Context) {
+	fmt.Println(err.Error())
 	c.AbortWithStatusJSON(400, gin.H{
 		"error": err.Error(),
 	})
