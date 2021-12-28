@@ -18,7 +18,7 @@ type responseError struct {
 func NewHTTPServer(authToken string, playerService service.PlayerService, lightService service.LightService, lightsApp app.LightsApp, thermostatService service.ThermostatService) httpServer {
 	return httpServer{
 		AuthToken:         authToken,
-		AuthEnabled:       false,
+		AuthEnabled:       true,
 		PlayerService:     playerService,
 		LightService:      lightService,
 		LightsApp:         lightsApp,
