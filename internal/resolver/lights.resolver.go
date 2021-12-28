@@ -26,6 +26,7 @@ func (m httpServer) setBrightness(c *gin.Context) {
 	err := m.LightService.SetBrightness(setBrightnessInput)
 	if err != nil {
 		returnErrorJson(err, c)
+		return
 	}
 
 	c.JSON(200, gin.H{"success": "true"})
