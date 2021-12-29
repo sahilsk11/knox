@@ -14,7 +14,7 @@ type setHeatRequest struct {
 func (m httpServer) setHeat(c *gin.Context) {
 	var requestBody setHeatRequest
 
-	err := c.ShouldBindJSON(requestBody)
+	err := c.ShouldBindJSON(&requestBody)
 	if err != nil {
 		returnErrorJson(err, c)
 		return
