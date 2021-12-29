@@ -1,6 +1,8 @@
 package service
 
 import (
+	"fmt"
+
 	domain "github.com/sahilsk11/knox/internal/domain/thermostat"
 	"github.com/sahilsk11/knox/internal/repository"
 )
@@ -37,6 +39,7 @@ type SetTemperatureInput struct {
 }
 
 func (m thermostatService) SetTemperature(input SetTemperatureInput) error {
+	fmt.Println(input.ThermostatName)
 	thermostat, err := m.ThermostatDatabaseRepository.GetThermostat(input.ThermostatName)
 	if err != nil {
 		return err
