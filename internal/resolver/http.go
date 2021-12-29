@@ -54,6 +54,7 @@ func (m httpServer) StartHTTPServer(port int) {
 
 	// climate routes
 	router.POST("/climate/reduceHeat", m.reduceHeat)
+	router.POST("/climate/setHeat", m.setHeat)
 
 	router.Run(fmt.Sprintf(":%d", port))
 }
