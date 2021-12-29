@@ -51,6 +51,7 @@ func (m httpServer) StartHTTPServer(port int) {
 	// scene routes
 	router.POST("/scenes/goodnight", m.goodnight)
 	router.POST("/scenes/theater", m.theater)
+	router.POST("/scenes/downstairsLightsOn", m.downstairsLightsOn)
 
 	// climate routes
 	router.POST("/climate/reduceHeat", m.reduceHeat)

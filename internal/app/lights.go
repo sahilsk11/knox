@@ -8,6 +8,7 @@ import (
 type LightsApp interface {
 	EnableTheaterScene() error
 	GoodnightScene() error
+	DownstairsLightsOn() error
 }
 
 type lightsApp struct {
@@ -77,6 +78,23 @@ func (m lightsApp) GoodnightScene() error {
 		TurnOffInputs: turnOffInputs,
 	}
 	err := m.asyncControl(controllerInput)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m lightsApp) DownstairsLightsOn() error {
+	controlInput := asyncControlInput{
+		TurnOnInputs: []domain.LightName{
+			domain.Light_Kitchen,
+			domain.Light_Kitchen_Accent,
+			domain.Light_Dining,
+			domain.Light_Living,
+			domain.Light_Entry,
+		},
+	}
+	err := m.asyncControl(controlInput)
 	if err != nil {
 		return err
 	}
