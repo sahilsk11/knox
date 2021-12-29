@@ -3,7 +3,11 @@
     "SAHIL_THERMOSTAT": {
       "homeAssistantEntityName": "climate.mysa_cc990c"
     },
-    "GUEST_THERMOSTAT": {},
-    "LIVING_THERMOSTAT": {}
+    "GUEST_THERMOSTAT": {
+      "homeAssistantEntityName": "climate.mysa_cde130"
+    },
+    "LIVING_THERMOSTAT": {
+      "homeAssistantEntityName": "climate.mysa_cd9b68"
+    }
   }
 }
