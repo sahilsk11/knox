@@ -1,10 +1,24 @@
 package service
 
-import "github.com/sahilsk11/knox/internal/domain/blinds"
+import domain "github.com/sahilsk11/knox/internal/domain/blinds"
 
 type BlindsService interface {
-	OpenOne(blinds.BlindsName) error
-	OpenMany([]blinds.BlindsName) error
-	CloseMany([]blinds.BlindsName) error
-	CloseOne(blinds.BlindsName) error
+	OpenOne(domain.BlindsName) error
+	OpenMany([]domain.BlindsName) error
+	CloseMany([]domain.BlindsName) error
+	CloseOne(domain.BlindsName) error
+	ListBlinds() []domain.BlindsName
+}
+
+type blindsService struct {
+	BlindsRepository domain.BlindsControllerRepository
+}
+
+func (m blindsService) ListBlinds() []domain.BlindsName {
+	return []domain.BlindsName{
+		domain.Blinds_BigWindowFirstThird,
+		domain.Blinds_BigWindowSecondThirds,
+		domain.Blinds_Door,
+		domain.Blinds_LivingRoom,
+	}
 }
