@@ -1,6 +1,6 @@
 package blinds
 
 type BlindsControllerRepository interface {
-	SetHeight(map[BlindsName]int) error
+	SetHeight(BlindsName, int) error
 	GetHeight(BlindsName) (int, error)
 }
